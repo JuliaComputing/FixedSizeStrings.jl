@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/JuliaComputing/FixedSizeStrings.jl.svg?branch=master)](https://travis-ci.org/JuliaComputing/FixedSizeStrings.jl)
+
+[![codecov.io](http://codecov.io/github/JuliaComputing/FixedSizeStrings.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaComputing/FixedSizeStrings.jl?branch=master)
+
 # FixedSizeStrings.jl
 
 This is a string type for compactly storing short strings of statically-known size.
