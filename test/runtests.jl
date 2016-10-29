@@ -23,3 +23,14 @@ let s = FixedSizeString{3}("xyZ")
 end
 
 @test_throws InexactError FixedSizeString{2}("αb")
+
+let b = IOBuffer()
+    write(b, "a tEst str1ng")
+    seekstart(b)
+    @test read(b, FixedSizeString{4}) == "a tE"
+    @test read(b, FixedSizeString{2}) == "st"
+    b = IOBuffer()
+    data = "\0Te\$t\0_"
+    write(b, FixedSizeString(data))
+    @test takebuf_string(b) == data
+end
