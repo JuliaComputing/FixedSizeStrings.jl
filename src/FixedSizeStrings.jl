@@ -4,11 +4,13 @@ export FixedSizeString
 
 import Base: endof, next, getindex, sizeof, convert, read, write
 
-immutable FixedSizeString{N} <: DirectIndexString
+struct FixedSizeString{N} <: DirectIndexString
     data::NTuple{N,UInt8}
-    FixedSizeString(t::NTuple{N}) = new(t)
-    FixedSizeString(itr) = new(totuple(NTuple{N,UInt8}, itr, start(itr)))
+    FixedSizeString{N}(itr) where {N} = new(totuple(NTuple{N,UInt8}, itr, start(itr)))
 end
+
+FixedSizeString(t::NTuple{N}) where {N} = FixedSizeString{N}(t)
+FixedSizeString(itr) = FixedSizeString{length(itr)}(itr)
 
 @inline function totuple(T, itr, s)
     done(itr, s) && error("too few values")
@@ -20,22 +22,22 @@ end
 
 @inline totuple(::Type{Tuple{}}, itr, s) = ()
 
-endof{N}(s::FixedSizeString{N}) = N
+endof(s::FixedSizeString{N}) where {N} = N
 next(s::FixedSizeString, i::Int) = (Char(s.data[i]), i+1)
 getindex(s::FixedSizeString, i::Int) = Char(s.data[i])
 sizeof(s::FixedSizeString) = sizeof(s.data)
 
 convert(::Type{FixedSizeString}, s::AbstractString) = FixedSizeString{length(s)}(s)
-convert{N}(::Type{FixedSizeString{N}}, s::AbstractString) = FixedSizeString{N}(s)
-convert{N}(::Type{FixedSizeString{N}}, s::FixedSizeString{N}) = s
+convert(::Type{FixedSizeString{N}}, s::AbstractString) where {N} = FixedSizeString{N}(s)
+convert(::Type{FixedSizeString{N}}, s::FixedSizeString{N}) where {N} = s
 
-function read{N}(io::IO, T::Type{FixedSizeString{N}})
+function read(io::IO, T::Type{FixedSizeString{N}}) where N
     temp = Ref{FixedSizeString{N}}()
     Base.unsafe_read(io, convert(Ptr{UInt8}, Base.unsafe_convert(Ptr{Void}, temp)), N)
     return temp[]
 end
 
-function write{N}(io::IO, s::FixedSizeString{N})
+function write(io::IO, s::FixedSizeString{N}) where N
     Base.unsafe_write(io, convert(Ptr{UInt8}, pointer_from_objref(s)), N)
 end
 
