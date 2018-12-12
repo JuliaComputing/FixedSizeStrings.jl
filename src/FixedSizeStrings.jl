@@ -2,41 +2,43 @@ module FixedSizeStrings
 
 export FixedSizeString
 
-import Base: endof, next, getindex, sizeof, convert, read, write
+import Base: iterate, lastindex, getindex, sizeof, length, ncodeunits, codeunit, isvalid, read, write
 
-immutable FixedSizeString{N} <: DirectIndexString
+struct FixedSizeString{N} <: AbstractString
     data::NTuple{N,UInt8}
-    FixedSizeString(t::NTuple{N}) = new(t)
-    FixedSizeString(itr) = new(totuple(NTuple{N,UInt8}, itr, start(itr)))
+    FixedSizeString{N}(itr) where {N} = new(NTuple{N,UInt8}(itr))
 end
 
-@inline function totuple(T, itr, s)
-    done(itr, s) && error("too few values")
-    n = next(itr, s)
-    v = getfield(n, 1)
-    s = getfield(n, 2)
-    (convert(Base.tuple_type_head(T), v), totuple(Base.tuple_type_tail(T), itr, s)...)
+FixedSizeString(s::AbstractString) = FixedSizeString{length(s)}(s)
+
+function iterate(s::FixedSizeString{N}, i::Int = 1) where N
+    i > N && return nothing
+    return (Char(s.data[i]), i+1)
 end
 
-@inline totuple(::Type{Tuple{}}, itr, s) = ()
+lastindex(s::FixedSizeString{N}) where {N} = N
 
-endof{N}(s::FixedSizeString{N}) = N
-next(s::FixedSizeString, i::Int) = (Char(s.data[i]), i+1)
 getindex(s::FixedSizeString, i::Int) = Char(s.data[i])
+
 sizeof(s::FixedSizeString) = sizeof(s.data)
 
-convert(::Type{FixedSizeString}, s::AbstractString) = FixedSizeString{length(s)}(s)
-convert{N}(::Type{FixedSizeString{N}}, s::AbstractString) = FixedSizeString{N}(s)
-convert{N}(::Type{FixedSizeString{N}}, s::FixedSizeString{N}) = s
+length(s::FixedSizeString) = length(s.data)
 
-function read{N}(io::IO, T::Type{FixedSizeString{N}})
+ncodeunits(s::FixedSizeString) = length(s.data)
+
+codeunit(::FixedSizeString) = UInt8
+codeunit(s::FixedSizeString, i::Integer) = s.data[i]
+
+isvalid(s::FixedSizeString, i::Int) = checkbounds(Bool, s, i)
+
+function read(io::IO, ::Type{FixedSizeString{N}}) where N
     temp = Ref{FixedSizeString{N}}()
-    Base.unsafe_read(io, convert(Ptr{UInt8}, Base.unsafe_convert(Ptr{Void}, temp)), N)
+    Base.unsafe_read(io, convert(Ptr{UInt8}, Base.unsafe_convert(Ptr{Cvoid}, temp)), N)
     return temp[]
 end
 
-function write{N}(io::IO, s::FixedSizeString{N})
-    Base.unsafe_write(io, convert(Ptr{UInt8}, pointer_from_objref(s)), N)
+function write(io::IO, s::FixedSizeString{N}) where N
+    write(io, Ref(s))
 end
 
 end

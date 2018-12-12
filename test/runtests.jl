@@ -1,10 +1,10 @@
-using Base.Test
+using Test
 using FixedSizeStrings
 
 let e = FixedSizeString{0}("")
     @test e == ""
     @test length(e) == 0
-    @test convert(String, e) == ""
+    @test convert(String, e) === ""
     @test isa(convert(String, e), String)
     @test convert(FixedSizeString{0}, "") == e
 end
