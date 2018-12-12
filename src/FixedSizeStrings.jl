@@ -31,14 +31,12 @@ codeunit(s::FixedSizeString, i::Integer) = s.data[i]
 
 isvalid(s::FixedSizeString, i::Int) = checkbounds(Bool, s, i)
 
-function read(io::IO, ::Type{FixedSizeString{N}}) where N
-    temp = Ref{FixedSizeString{N}}()
-    Base.unsafe_read(io, convert(Ptr{UInt8}, Base.unsafe_convert(Ptr{Cvoid}, temp)), N)
-    return temp[]
+function read(io::IO, T::Type{FixedSizeString{N}}) where N
+    return read!(io, Ref{T}())[]::T
 end
 
 function write(io::IO, s::FixedSizeString{N}) where N
-    write(io, Ref(s))
+    return write(io, Ref(s))
 end
 
 end

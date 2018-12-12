@@ -9,7 +9,7 @@ let e = FixedSizeString{0}("")
     @test convert(FixedSizeString{0}, "") == e
 end
 
-@test_throws ErrorException FixedSizeString{3}("ab")
+@test_throws ArgumentError FixedSizeString{3}("ab")
 
 let s = FixedSizeString{3}("xyZ")
     @test s == "xyZ"
@@ -32,5 +32,5 @@ let b = IOBuffer()
     b = IOBuffer()
     data = "\0Te\$t\0_"
     write(b, FixedSizeString(data))
-    @test takebuf_string(b) == data
+    @test String(take!(b)) == data
 end
