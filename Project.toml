@@ -1,0 +1,4 @@
+name = "FixedSizeStrings"
+uuid = "92fecc0a-48d7-11e9-3bb6-bd869495da27"
+authors = ["Mohammad Dashti <mdashti@gmail.com>"]
+version = "0.1.0"
