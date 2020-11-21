@@ -11,6 +11,9 @@ using SizedStrings
         @test SizedString{6}(UInt8['u', 'v', 'w', 'x', 'y', 'z']) == SizedString{6}("uvwxyz")
         @test SizedString{7}(b"abcdefg") == SizedString{7}("abcdefg")
 
+        s = SizedString{3}("foo")
+        @test SizedString{3}(s) === s
+
         @test_throws ArgumentError SizedString{3}("ab")
         @test_throws ArgumentError SizedString{4}(NTuple{5, UInt8}(('!', '(', '/', '%', ')')))
         @test_throws ArgumentError SizedString{5}('B', 'u', 'z', 'z')
