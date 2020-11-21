@@ -21,6 +21,8 @@ using SizedStrings
         @test_throws ArgumentError SizedString{7}(b"abcdef")
 
         @test_throws InexactError SizedString{3}("Σi")
+
+        @test sized"bar" == SizedString{3}("bar")
     end
 
     @testset "AbstractString Interface" begin

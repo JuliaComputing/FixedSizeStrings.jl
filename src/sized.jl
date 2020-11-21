@@ -21,6 +21,9 @@ SizedString{N}(fs::SizedString{N}) where {N} = fs
 # Fallback
 SizedString{N}(s) where {N} = SizedString{N}(String(s))
 
+macro sized_str(s)
+    :(SizedString{length($(esc(s)))}($(esc(s))))
+end
 
 ## AbstractString Implementation
 
@@ -43,6 +46,9 @@ codeunit(::SizedString) = UInt8
 @propagate_inbounds getindex(s::SizedString, i::Integer)::Char = s.data[i]
 
 isvalid(s::SizedString, i::Integer) = checkbounds(Bool, s, i)
+
+
+## IO
 
 function read(io::IO, T::Type{SizedString{N}}) where N
     return read!(io, Ref{T}())[]::T
