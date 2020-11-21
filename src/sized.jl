@@ -21,27 +21,28 @@ SizedString{N}(fs::SizedString{N}) where {N} = fs
 # Fallback
 SizedString{N}(s) where {N} = SizedString{N}(String(s))
 
-ncodeunits(s::SizedString) = length(s.data)
 
-codeunit(::SizedString) = UInt8
-@propagate_inbounds codeunit(s::SizedString, i::Integer) = s.data[i]
+## AbstractString Implementation
 
-function isvalid(s::SizedString, i::Integer)
-    @boundscheck return checkbounds(Bool, s, i)
-    true
-end
+ncodeunits(s::SizedString{N}) where {N} = N
 
 sizeof(s::SizedString) = sizeof(s.data)
+
+length(s::SizedString) = ncodeunits(s)
+length(S::Type{SizedString{N}}) where {N} = N
+
+lastindex(s::SizedString{N}) where {N} = N
 
 function iterate(s::SizedString{N}, i::Int = 1) where {N}
     i > N && return nothing
     return Char(s.data[i]), i+1
 end
 
-length(s::SizedString) = length(s.data)
-length(S::Type{SizedString{N}}) where {N} = N
+codeunit(::SizedString) = UInt8
+@propagate_inbounds codeunit(s::SizedString, i::Integer) = s.data[i]
+@propagate_inbounds getindex(s::SizedString, i::Integer)::Char = s.data[i]
 
-lastindex(s::SizedString) = lastindex(s.data)
+isvalid(s::SizedString, i::Integer) = checkbounds(Bool, s, i)
 
 function read(io::IO, T::Type{SizedString{N}}) where N
     return read!(io, Ref{T}())[]::T

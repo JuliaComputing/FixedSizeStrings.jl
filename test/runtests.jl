@@ -33,10 +33,8 @@ using SizedStrings
 
         @test codeunit(ss) == UInt8
 
-        vf(ss, s) = @inbounds isvalid(ss, rand(eachindex(s)))
-        @test isvalid(ss, rand(eachindex(s)))
-        @test vf(ss, s)
-        @test !isvalid(ss, N+1)
+        @test isvalid(ss, rand(eachindex(s))) == true
+        @test isvalid(ss, N+1) == false
 
         @test sizeof(ss) == N
 
@@ -75,9 +73,20 @@ using SizedStrings
 
         ss = SizedString{N}(s)
 
+        # Not sure how to test that inbounds actually works
+        inbound_codeunit(i) = (local s = ss; @inbounds codeunit(s, i))
+        @test_broken inbound_codeunit(0) isa UInt8
+
+        inbound_getindex(i) = (local s = ss; @inbounds s[i])
+        @test_broken inbound_getindex(0) isa Char
+
         for i in eachindex(s)
             @test codeunit(ss, i) === codeunit(s, i)
+            @test inbound_codeunit(i) === codeunit(s, i)
+
             @test ss[i] === s[i]
+            @test inbound_getindex(i) === s[i]
+
             @test ss[1:i] == s[1:i]
             @test ss[collect(i:N)] == s[collect(i:N)]
         end
