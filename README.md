@@ -1,5 +1,7 @@
 # SizedStrings.jl
 
+[![Build Status](https://github.com/Luapulu/SizedStrings.jl/workflows/CI/badge.svg)](https://github.com/Luapulu/SizedStrings.jl/workflows/CI/badge.svg)
+
 This packages introduces a string type for storing short strings of
 statically-known size compactly. As each character is stored in one byte, only
 the Latin-1 subset of Unicode is supported currently.
