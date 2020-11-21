@@ -49,7 +49,7 @@ using SizedStrings
     end
 
     @testset "Iteration" begin
-        N = rand(3:9)
+        N = 9
         s = rand(Char(32):Char(126), N)
 
         ss = SizedString{N}(s)
@@ -70,7 +70,7 @@ using SizedStrings
 
 
     @testset "Indexing" begin
-        N = rand(3:9)
+        N = 7
         s = String(rand(Char(32):Char(126), N))
 
         ss = SizedString{N}(s)
