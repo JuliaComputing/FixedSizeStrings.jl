@@ -1,6 +1,7 @@
 # SizedStrings.jl
 
 [![Build Status](https://github.com/Luapulu/SizedStrings.jl/workflows/CI/badge.svg)](https://github.com/Luapulu/SizedStrings.jl/workflows/CI/badge.svg)
+[![codecov](https://codecov.io/gh/Luapulu/SizedStrings.jl/branch/master/graph/badge.svg?token=9qibx3Mx9Q)](https://codecov.io/gh/Luapulu/SizedStrings.jl)
 
 This packages introduces a string type for storing short strings of
 statically-known size compactly. As each character is stored in one byte, only
