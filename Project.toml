@@ -1,7 +1,7 @@
 name = "SizedStrings"
 uuid = "f469014f-b01a-4cc4-831a-c5604b331f4f"
 authors = ["Jeff Bezanson <jeff.bezanson@gmail.com>", "Paul Nemec <paul.nemec@tum.de>"]
-version = "0.0.1"
+version = "1.0.0"
 
 [compat]
 julia = "0.7 - 1"
