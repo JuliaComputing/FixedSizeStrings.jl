@@ -6,6 +6,6 @@ using SizedStrings
 
     include("SizedString.jl")
 
-    include("MaxSizeString.jl")
+    include("PaddedString.jl")
 
 end

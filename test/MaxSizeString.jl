@@ -1,3 +1,0 @@
-@testset "MaxSizeString" begin
-
-end

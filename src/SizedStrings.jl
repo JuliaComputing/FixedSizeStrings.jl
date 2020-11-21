@@ -9,6 +9,6 @@ using Base: @propagate_inbounds
 export SizedString, @sized_str
 
 include("sized.jl")
-include("max-sized.jl")
+include("padded.jl")
 
 end
